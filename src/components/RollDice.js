@@ -7,8 +7,6 @@ import ConfettiComponent from './Confetti';
 
 import './RollDice.css';
 
-// let numArray = [1,2,3,4,5,6,7,8,9];
-
 const getRecCombinationSums = (givenArray, targetNum, index, mainReturnedArray, indArray) => {
 
     if(targetNum === 0){
@@ -51,6 +49,23 @@ const nmbrToLetter = (number) => {
     }
 }
 
+const letterToNumber = (letter) => {
+    switch (letter) {
+        case 'one':
+            return 1;
+        case 'two':
+            return 2;
+        case 'three':
+            return 3;
+        case 'four':
+            return 4;
+        case 'five':
+            return 5;
+        default:
+            return 6;
+    }
+}
+
 const RollDice = () => {
 
     const [stateArray, setStateArray] = useState([nmbrToLetter(1),nmbrToLetter(2)]);
@@ -63,6 +78,17 @@ const RollDice = () => {
     const [showOptions,setShowOptions] = useState(false);
     const [numArray, setNumArray] = useState([1,2,3,4,5,6,7,8,9]);
     const [showConfetti, setShowConfetti] = useState(false);
+    const [shuttingBox, setShuttingBox] = useState(false);
+
+    const resetGame = () => {
+        setTimeout(() => {
+            setPlayerTwoScore(0);
+            setPlayerOneScore(0);
+            setGameCounter(1);
+            setNumArray([1,2,3,4,5,6,7,8,9]);
+            setTurnFirstPlayer(true);
+        }, 1100);
+    }
 
     useEffect(() => {
         // if(gameCounter === 4) {
@@ -79,47 +105,83 @@ const RollDice = () => {
     useEffect(() => {
         if(gameCounter === 3) {
             setTimeout(() => {
-                setPlayerTwoScore(0);
-                setPlayerOneScore(0);
-                setGameCounter(1);
-                setNumArray([1,2,3,4,5,6,7,8,9]);
-                setTurnFirstPlayer(true);
-
-            }, 6000);
+                resetGame();
+                }, 10000);
         }
 
     }, [ gameCounter ]);
 
-    const handleClick = (playerNumber) => {
-        const face1 = (Math.floor(Math.random() * 6) + 1);
-        const face2 = (Math.floor(Math.random() * 6) + 1);
-        setStateArray([nmbrToLetter(face1), nmbrToLetter(face2)]);
-        setNumberDrawn(face2 + face1);
-        // setTurnFirstPlayer(!turnFirstPlayer);
-
-        let combos = getCombinations(numArray, (face1 + face2));
-
-        if(combos.length > 0) {
-            setCombos(combos);
-            setShowOptions(true);
-        } else {
-            setShowOptions(false);
-            // setGameCounter(gameCounter + 1);
-            setTurnFirstPlayer(!turnFirstPlayer);
-
-            const score = numArray.reduce((accumulator, item) => {
-                return accumulator + item;
-            }, 0);
-
-            if(turnFirstPlayer) {
-                setPlayerOneScore(score);
-            } else {
-                setPlayerTwoScore(score);
-                // setNumArray([1,2,3,4,5,6,7,8,9]);
-            }
+    useEffect(() => {
+        if(gameCounter === 3) {
+            setTimeout(() => {
+                resetGame();
+                }, 10000);
         }
 
-        // playerNumber === 1 ? setPlayerOneScore(playerOneScore + face1 + face2) : setPlayerTwoScore(playerTwoScore + face1 + face2)
+    }, [ shuttingBox ]);
+
+
+    useEffect(() => {
+        // if(gameCounter <= 3) {
+        //     if (turnFirstPlayer) {
+        //         alert('Player 1 - your turn to roll the dice');
+        //     } else {
+        //         alert('Player 2 - your turn to roll the dice');
+        //     }
+        // }
+
+    }, [ turnFirstPlayer ]);
+
+    const getDifferentFaces = () => {
+        let tempFace1 = (Math.floor(Math.random() * 6) + 1);
+        let tempFace2 = (Math.floor(Math.random() * 6) + 1);
+
+        if(nmbrToLetter(tempFace1) !== stateArray[0] && nmbrToLetter(tempFace2) !== stateArray[1]) {
+            setStateArray([nmbrToLetter(tempFace1), nmbrToLetter(tempFace2)]);
+            return [tempFace1, tempFace2];
+        } else {
+            getDifferentFaces();
+        }
+    }
+
+    const handleClick = (playerNumber) => {
+
+        setTimeout(() => {
+            const face1 = (Math.floor(Math.random() * 6) + 1);
+            const face2 = (Math.floor(Math.random() * 6) + 1);
+            setStateArray([nmbrToLetter(face1), nmbrToLetter(face2)]);
+
+            const sum = face1 + face2;
+
+                setNumberDrawn(sum);
+                // setTurnFirstPlayer(!turnFirstPlayer);
+
+                let combos = getCombinations(numArray, (sum));
+
+                if (combos.length > 0) {
+                    setCombos(combos);
+                    setShowOptions(true);
+                } else {
+                    setShowOptions(false);
+                    // setGameCounter(gameCounter + 1);
+
+
+                    const score = numArray.reduce((accumulator, item) => {
+                        return accumulator + item;
+                    }, 0);
+
+                    if (turnFirstPlayer) {
+                        setPlayerOneScore(score);
+                    } else {
+                        setPlayerTwoScore(score);
+                        // setNumArray([1,2,3,4,5,6,7,8,9]);
+                    }
+
+                    setTurnFirstPlayer(!turnFirstPlayer);
+                }
+            // }
+        }, 200);
+
     }
 
     const onDropDownClick = (selectedValue) => {
@@ -139,8 +201,20 @@ const RollDice = () => {
 
         setNumArray(theArray);
 
+        // this is the straight up shutting the box logic
+        if(numArray.length === 0) {
+           setShuttingBox(true);
+        }
+
        // console.log(numArray);
         setShowOptions(false);
+    }
+
+    const showingConfetti = () => {
+        if((playerOneScore > 0 && playerTwoScore > 0) || (shuttingBox)){
+                return <ConfettiComponent />;
+
+        }
     }
 
 
@@ -149,15 +223,21 @@ const RollDice = () => {
           <Jumbotron>
               {/*{(playerOneScore === 0 && playerTwoScore === 0) && 'Game starting....'}*/}
               {(playerOneScore === 0 || playerTwoScore === 0) && <span className="spannedTitle">Lets see who can shut the box!!!!</span>}
-              {(playerOneScore > 0 && playerTwoScore > 0) && playerOneScore > playerTwoScore && <span className="spannedTitle">Congrats -- Player Two has won</span>}
-              {(playerOneScore > 0 && playerTwoScore > 0) && playerOneScore < playerTwoScore && <span className="spannedTitle">Congrats -- Player One has won</span>}
-              {(playerOneScore > 0 && playerTwoScore > 0) && playerOneScore === playerTwoScore && <span className="spannedTitle">Its a draw, sweet!</span>}
-              {(playerOneScore > 0 && playerTwoScore > 0) && <ConfettiComponent />}
+              {shuttingBox && turnFirstPlayer && <span className="spannedTitle">Congrats -- Player One has shut the box!!!!!!!!</span>}
+              {shuttingBox && !turnFirstPlayer && <span className="spannedTitle">Congrats -- Player Two has shut the box!!!!!!!!</span>}
+              {(playerOneScore > 0 && playerTwoScore > 0) && playerOneScore > playerTwoScore && <span className="spannedTitle decision01">Congrats -- Player Two has won</span>}
+              {(playerOneScore > 0 && playerTwoScore > 0) && playerOneScore < playerTwoScore && <span className="spannedTitle decision01">Congrats -- Player One has won</span>}
+              {(playerOneScore > 0 && playerTwoScore > 0) && playerOneScore === playerTwoScore && <span className="spannedTitle decision01">Its a draw, sweet!</span>}
+              { showingConfetti() }
+
+              <br/>
+                  {!(playerOneScore > 0 && playerTwoScore > 0) && !shuttingBox && turnFirstPlayer && <div className="turn01">Player 1 - it's your turn mate!</div>}
+              {!(playerOneScore > 0 && playerTwoScore > 0) && !shuttingBox && !turnFirstPlayer && <div className="turn01">Player 2 - it's your turn mate!</div>}
           </Jumbotron>
             <div className="d-flex justify-content-around">
                 <Button variant='primary' className='btn01' onClick={() => handleClick(1)}
-                disabled={!turnFirstPlayer}>Player 1</Button>
-                <Button onClick={() => handleClick(2)} variant='primary' className='btn01' disabled={turnFirstPlayer}>Player 2</Button>
+                disabled={!turnFirstPlayer || showOptions}>Player 1, roll the dice</Button>
+                <Button onClick={() => handleClick(2)} variant='primary' className='btn01' disabled={turnFirstPlayer || showOptions}>Player 2, roll the dice</Button>
             </div>
             { combos.length > 0 && showOptions && <div className="d-flex justify-content-around">
                     <DropdownButton id="dropdown-basic-button" title={`Player ${turnFirstPlayer? '1' : '2'} Options`}>

@@ -1,5 +1,32 @@
 .badger01 {
     font-size: 2em;
     margin-right: .2em;
-    /*background: white;*/
+}
+
+.dark {
+    background: black;
+    color: white;
+    padding: .3em .5em .5em .5em;
+    width: 1.6em;
+    height: 2.2em;
+}
+
+.light {
+    background: white;
+    color: black;
+    padding: .3em .5em .5em .5em;;
+    border: 1px solid black;
+    width: 1.6em;
+    height: 2.2em;
+    /*transform: rotateY( 180deg );*/
+    /*transition: transform 2s;*/
+    /*-webkit-transition: transform 2s;*/
+    /*transform-style: preserve-3d;*/
+    /*-webkit-transform-style: preserve-3d;*/
+}
+
+
+.keyContainer {
+    display: flex;
+    justify-content: center;
 }

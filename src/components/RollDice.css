@@ -3,7 +3,28 @@
     margin-right: 1em;
 }
 
+.decision01 {
+    animation: textgrowth 1s infinite alternate;
+    animation-iteration-count: 2;
+    animation-delay: 800ms;
+}
+
 .spannedTitle {
     font-weight: bold;
     font-size: 2em;
+}
+
+.turn01 {
+    animation: textgrowth 1s infinite alternate;
+    animation-iteration-count: 2;
+    animation-delay: 800ms;
+}
+
+@keyframes textgrowth {
+    0% {
+        font-size: 2em;
+    }
+    100% {
+        font-size: 3em;
+    }
 }

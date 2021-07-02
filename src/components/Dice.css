@@ -1,6 +1,45 @@
-.dice01 {
+.dice01, .dice02 {
     font-size: 8em;
     margin-top: .2em;
     margin-left: 1em;
     color: red;
+}
+
+.dice01 {
+    animation-name: rotate01;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+}
+
+.dice02 {
+    animation-name: rotate02;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+}
+
+
+@keyframes rotate01 {
+    from {
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(1440deg);
+        -o-transform: rotate(1440deg);
+        transform: rotate(1440deg);
+    }
+}
+
+@keyframes rotate02 {
+    from {
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(1440deg);
+        -o-transform: rotate(1440deg);
+        transform: rotate(1440deg);
+    }
 }

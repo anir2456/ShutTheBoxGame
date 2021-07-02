@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './Dice.css';
 
 const Dice = ({ face }) => {
- return <i className={`dice01 fas fa-dice-${face}`} />
+
+    const [diceClass, setDiceClass] = useState(`dice01 fas fa-dice-${face}`);
+
+    useEffect(() => {
+        diceClass.includes('dice01') ? setDiceClass(`dice02 fas fa-dice-${face}`) : setDiceClass(`dice01 fas fa-dice-${face}`);
+    }, [face]);
+
+ return <i className={diceClass} />
 }
 
 Dice.propTypes = {
