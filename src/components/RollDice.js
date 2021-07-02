@@ -91,13 +91,6 @@ const RollDice = () => {
     }
 
     useEffect(() => {
-        // if(gameCounter === 4) {
-        //     setTimeout(() => {
-        //         setPlayerTwoScore(0);
-        //         setPlayerOneScore(0);
-        //         setGameCounter(0);
-        //     }, 4000);
-        // }
         setNumArray([1,2,3,4,5,6,7,8,9]);
         setGameCounter(gameCounter + 1);
     }, [ turnFirstPlayer ]);
@@ -177,6 +170,7 @@ const RollDice = () => {
                         // setNumArray([1,2,3,4,5,6,7,8,9]);
                     }
 
+                    setCombos([]);
                     setTurnFirstPlayer(!turnFirstPlayer);
                 }
             // }
@@ -220,7 +214,7 @@ const RollDice = () => {
 
     return (
         <div>
-          <Jumbotron>
+          <Jumbotron className="outerJumbo">
               {/*{(playerOneScore === 0 && playerTwoScore === 0) && 'Game starting....'}*/}
               {(playerOneScore === 0 || playerTwoScore === 0) && <span className="spannedTitle">Lets see who can shut the box!!!!</span>}
               {shuttingBox && turnFirstPlayer && <span className="spannedTitle">Congrats -- Player One has shut the box!!!!!!!!</span>}
@@ -230,17 +224,18 @@ const RollDice = () => {
               {(playerOneScore > 0 && playerTwoScore > 0) && playerOneScore === playerTwoScore && <span className="spannedTitle decision01">Its a draw, sweet!</span>}
               { showingConfetti() }
 
-              <br/>
                   {!(playerOneScore > 0 && playerTwoScore > 0) && !shuttingBox && turnFirstPlayer && <div className="turn01">Player 1 - it's your turn mate!</div>}
               {!(playerOneScore > 0 && playerTwoScore > 0) && !shuttingBox && !turnFirstPlayer && <div className="turn01">Player 2 - it's your turn mate!</div>}
           </Jumbotron>
+            <div className="outerContainer">
             <div className="d-flex justify-content-around">
                 <Button variant='primary' className='btn01' onClick={() => handleClick(1)}
                 disabled={!turnFirstPlayer || showOptions}>Player 1, roll the dice</Button>
                 <Button onClick={() => handleClick(2)} variant='primary' className='btn01' disabled={turnFirstPlayer || showOptions}>Player 2, roll the dice</Button>
             </div>
+                <br/>
             { combos.length > 0 && showOptions && <div className="d-flex justify-content-around">
-                    <DropdownButton id="dropdown-basic-button" title={`Player ${turnFirstPlayer? '1' : '2'} Options`}>
+                    <DropdownButton id="dropdown-basic-button" title={`Player ${turnFirstPlayer? '1' : '2'} - Please select your key combo`}>
                         {
                             combos.map(combo => {
                                 return <Dropdown.Item title={combo.toString()} onClick={
@@ -253,6 +248,7 @@ const RollDice = () => {
                     </DropdownButton>
             </div>
             }
+            {combos.length === 0 && !showOptions && gameCounter !== 0 && !(playerOneScore === 0 && playerTwoScore === 0) && <div className="sorryMessage01">No combination was found, switching players/ round over.</div>}
             <br/>
             <Dice face={stateArray[0]}/>
 
@@ -268,6 +264,7 @@ const RollDice = () => {
             </div>
             <br/>
             <SHutterBox remainingOnes={numArray}/>
+            </div>
         </div>
     );
 };

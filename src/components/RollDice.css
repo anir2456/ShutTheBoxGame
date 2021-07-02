@@ -9,6 +9,15 @@
     animation-delay: 800ms;
 }
 
+.outerJumbo {
+    margin-bottom: 0;
+}
+
+.outerContainer {
+    background-color: green;
+    margin-top: 0;
+}
+
 .spannedTitle {
     font-weight: bold;
     font-size: 2em;
@@ -18,6 +27,11 @@
     animation: textgrowth 1s infinite alternate;
     animation-iteration-count: 2;
     animation-delay: 800ms;
+}
+
+.sorryMessage01 {
+    font-style: italic;
+    font-weight: bolder;
 }
 
 @keyframes textgrowth {

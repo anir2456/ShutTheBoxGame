@@ -4,18 +4,18 @@
 }
 
 .dark {
-    background: black;
-    color: white;
+    background: #AA8347;
+    color: black;
     padding: .3em .5em .5em .5em;
+    border: .1em outset  #966F33;
     width: 1.6em;
     height: 2.2em;
 }
 
 .light {
-    background: white;
-    color: black;
+    background: #AA8347;
     padding: .3em .5em .5em .5em;;
-    border: 1px solid black;
+    border: .1em outset  #966F33;
     width: 1.6em;
     height: 2.2em;
     /*transform: rotateY( 180deg );*/
