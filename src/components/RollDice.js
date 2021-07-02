@@ -77,7 +77,6 @@ const RollDice = () => {
     const [combos, setCombos] = useState([]);
     const [showOptions,setShowOptions] = useState(false);
     const [numArray, setNumArray] = useState([1,2,3,4,5,6,7,8,9]);
-    const [showConfetti, setShowConfetti] = useState(false);
     const [shuttingBox, setShuttingBox] = useState(false);
 
     const resetGame = () => {
@@ -216,6 +215,7 @@ const RollDice = () => {
         <div>
           <Jumbotron className="outerJumbo">
               {/*{(playerOneScore === 0 && playerTwoScore === 0) && 'Game starting....'}*/}
+              {(playerOneScore > 0 && playerTwoScore > 0) && <div className="restarting01">Game will be restarting in a few seconds....</div>}
               {(playerOneScore === 0 || playerTwoScore === 0) && <span className="spannedTitle">Lets see who can shut the box!!!!</span>}
               {shuttingBox && turnFirstPlayer && <span className="spannedTitle">Congrats -- Player One has shut the box!!!!!!!!</span>}
               {shuttingBox && !turnFirstPlayer && <span className="spannedTitle">Congrats -- Player Two has shut the box!!!!!!!!</span>}

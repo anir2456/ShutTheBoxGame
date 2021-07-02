@@ -1,5 +1,5 @@
 .dice01, .dice02 {
-    font-size: 8em;
+    font-size: 5em;
     margin-top: .2em;
     margin-left: 1em;
     color: red;
@@ -13,7 +13,7 @@
 
 .dice02 {
     animation-name: rotate02;
-    animation-duration: 1s;
+    animation-duration: 1.5s;
     animation-iteration-count: 1;
 }
 
@@ -25,9 +25,9 @@
         transform: rotate(0deg);
     }
     to {
-        -webkit-transform: rotate(1440deg);
-        -o-transform: rotate(1440deg);
-        transform: rotate(1440deg);
+        -webkit-transform: rotateY(1440deg);
+        -o-transform: rotateY(1440deg);
+        transform: rotateY(1440deg);
     }
 }
 

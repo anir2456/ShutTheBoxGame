@@ -4,9 +4,14 @@
 }
 
 .decision01 {
-    animation: textgrowth 1s infinite alternate;
+    animation: textgrowth 2.5s infinite alternate;
     animation-iteration-count: 2;
-    animation-delay: 800ms;
+    animation-delay: 1000ms;
+}
+
+.restarting01 {
+    color: rgba(27, 46, 238, 0.85);
+    font-weight: bold;
 }
 
 .outerJumbo {

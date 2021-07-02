@@ -18,15 +18,30 @@
     border: .1em outset  #966F33;
     width: 1.6em;
     height: 2.2em;
-    /*transform: rotateY( 180deg );*/
-    /*transition: transform 2s;*/
-    /*-webkit-transition: transform 2s;*/
-    /*transform-style: preserve-3d;*/
-    /*-webkit-transform-style: preserve-3d;*/
 }
 
 
 .keyContainer {
     display: flex;
     justify-content: center;
+}
+
+.cardContainer02_back{
+    /*transform: translateZ(2rem);*/
+    animation-name: rotate04;
+    animation-duration: .4s;
+    animation-iteration-count: 1;
+}
+
+@keyframes rotate04 {
+    from {
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotateY(90deg);
+        -o-transform: rotateY(90deg);
+        transform: rotateY(90deg);
+    }
 }
