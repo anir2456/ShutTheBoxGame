@@ -86,6 +86,7 @@ const RollDice = () => {
             setGameCounter(1);
             setNumArray([1,2,3,4,5,6,7,8,9]);
             setTurnFirstPlayer(true);
+            setShuttingBox(false);
         }, 1100);
     }
 
@@ -100,31 +101,26 @@ const RollDice = () => {
                 resetGame();
                 }, 10000);
         }
-
-    }, [ gameCounter ]);
+        }, [ gameCounter ]);
 
     useEffect(() => {
-        if(gameCounter === 3) {
+        if(shuttingBox) {
             setTimeout(() => {
                 resetGame();
                 }, 10000);
         }
+        }, [ shuttingBox ]);
 
-    }, [ shuttingBox ]);
+    const getFaces = () => {
+        let faces = [];
+        faces[0] = (Math.floor(Math.random() * 6) + 1);
+        faces[1] = (Math.floor(Math.random() * 6) + 1);
 
-
-    useEffect(() => {
-        // if(gameCounter <= 3) {
-        //     if (turnFirstPlayer) {
-        //         alert('Player 1 - your turn to roll the dice');
-        //     } else {
-        //         alert('Player 2 - your turn to roll the dice');
-        //     }
-        // }
-
-    }, [ turnFirstPlayer ]);
+        return faces;
+    }
 
     const getDifferentFaces = () => {
+
         let tempFace1 = (Math.floor(Math.random() * 6) + 1);
         let tempFace2 = (Math.floor(Math.random() * 6) + 1);
 
@@ -139,8 +135,18 @@ const RollDice = () => {
     const handleClick = (playerNumber) => {
 
         setTimeout(() => {
-            const face1 = (Math.floor(Math.random() * 6) + 1);
-            const face2 = (Math.floor(Math.random() * 6) + 1);
+
+            let face1 = 0;
+            let face2 = 0;
+
+            do {
+                const faceArr = getFaces();
+                face1 = faceArr[0];
+                face2 = faceArr[1];
+            } while (face2 === letterToNumber(stateArray[1]) || face1 === letterToNumber(stateArray[0]));
+
+            // const face1 = (Math.floor(Math.random() * 6) + 1);
+            // const face2 = (Math.floor(Math.random() * 6) + 1);
             setStateArray([nmbrToLetter(face1), nmbrToLetter(face2)]);
 
             const sum = face1 + face2;
@@ -195,7 +201,7 @@ const RollDice = () => {
         setNumArray(theArray);
 
         // this is the straight up shutting the box logic
-        if(numArray.length === 0) {
+        if(theArray.length === 0) {
            setShuttingBox(true);
         }
 
@@ -215,10 +221,10 @@ const RollDice = () => {
         <div>
           <Jumbotron className="outerJumbo">
               {/*{(playerOneScore === 0 && playerTwoScore === 0) && 'Game starting....'}*/}
-              {(playerOneScore > 0 && playerTwoScore > 0) && <div className="restarting01">Game will be restarting in a few seconds....</div>}
-              {(playerOneScore === 0 || playerTwoScore === 0) && <span className="spannedTitle">Lets see who can shut the box!!!!</span>}
-              {shuttingBox && turnFirstPlayer && <span className="spannedTitle">Congrats -- Player One has shut the box!!!!!!!!</span>}
-              {shuttingBox && !turnFirstPlayer && <span className="spannedTitle">Congrats -- Player Two has shut the box!!!!!!!!</span>}
+              {((playerOneScore > 0 && playerTwoScore > 0) || shuttingBox) && <div className="restarting01">Game will be restarting in a few seconds....</div>}
+              {(playerOneScore === 0 || playerTwoScore === 0) && !shuttingBox && <span className="spannedTitle">Lets see who can shut the box!!!!</span>}
+              {shuttingBox && turnFirstPlayer && <span className="spannedTitle decision01">Congrats -- Player One has shut the box!!!!!!!!</span>}
+              {shuttingBox && !turnFirstPlayer && <span className="spannedTitle decision01">Congrats -- Player Two has shut the box!!!!!!!!</span>}
               {(playerOneScore > 0 && playerTwoScore > 0) && playerOneScore > playerTwoScore && <span className="spannedTitle decision01">Congrats -- Player Two has won</span>}
               {(playerOneScore > 0 && playerTwoScore > 0) && playerOneScore < playerTwoScore && <span className="spannedTitle decision01">Congrats -- Player One has won</span>}
               {(playerOneScore > 0 && playerTwoScore > 0) && playerOneScore === playerTwoScore && <span className="spannedTitle decision01">Its a draw, sweet!</span>}
