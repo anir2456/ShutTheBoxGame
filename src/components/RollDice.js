@@ -272,7 +272,7 @@ const RollDice = () => {
                 {/*{(playerOneScore === 0 && playerTwoScore === 0) && 'Game starting....'}*/}
                 {((playerOneScore > 0 && playerTwoScore > 0) || shuttingBox) && (
                     <div className="restarting01">
-                        Game will be restarting in a few seconds....
+                        Please wait, game will be restarting in a few seconds..
                     </div>
                 )}
                 {(playerOneScore === 0 || playerTwoScore === 0) && !shuttingBox && (
@@ -328,7 +328,7 @@ const RollDice = () => {
             </Jumbotron>
             <div className="outerContainer">
                 <SHutterBox remainingOnes={numArray} />
-                <div className="d-flex justify-content-around">
+                {!(gameCounter === 3 || shuttingBox) && <div className="d-flex justify-content-around">
                     <Button
                         variant="primary"
                         className="btn01"
@@ -345,7 +345,7 @@ const RollDice = () => {
                     >
                         Player 2, roll the dice
                     </Button>
-                </div>
+                </div> }
                 <br />
                 {!(
                     numArray.includes(7) ||
