@@ -1,35 +1,41 @@
 .badger01 {
-    font-size: 2em;
-    margin-right: .2em;
+    font-size: 1.5em;
+    margin-right: 0.2em;
+}
+
+@media (max-width: 430px) {
+    .badger01 {
+        font-size: 1.2em;
+        margin-right: 0.2em;
+    }
 }
 
 .dark {
-    background: #AA8347;
+    background: #aa8347;
     color: black;
-    padding: .3em .5em .5em .5em;
-    border: .1em outset  #966F33;
+    padding: 0.3em 0.5em 0.5em 0.5em;
+    border: 0.1em outset #966f33;
     width: 1.6em;
     height: 2.2em;
 }
 
 .light {
-    background: #AA8347;
-    padding: .3em .5em .5em .5em;;
-    border: .1em outset  #966F33;
+    background: #aa8347;
+    padding: 0.3em 0.5em 0.5em 0.5em;
+    border: 0.1em outset #966f33;
     width: 1.6em;
     height: 2.2em;
 }
-
 
 .keyContainer {
     display: flex;
     justify-content: center;
 }
 
-.cardContainer02_back{
+.cardContainer02_back {
     /*transform: translateZ(2rem);*/
     animation-name: rotate04;
-    animation-duration: .4s;
+    animation-duration: 0.4s;
     animation-iteration-count: 1;
 }
 
