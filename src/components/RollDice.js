@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import Dice from "./Dice";
 import {
     Button,
@@ -98,6 +98,8 @@ const RollDice = () => {
     const [showOptions, setShowOptions] = useState(false);
     const [numArray, setNumArray] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     const [shuttingBox, setShuttingBox] = useState(false);
+    const [oneOrTwoDiceDecider, setOneOrTwoDiceDecider] = useState(false);
+    const [showOneDice, setShowOneDice] = useState(false);
 
     const resetGame = () => {
         setTimeout(() => {
@@ -107,12 +109,22 @@ const RollDice = () => {
             setNumArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
             setTurnFirstPlayer(true);
             setShuttingBox(false);
+            setShowOneDice(false);
+            setOneOrTwoDiceDecider(false);
         }, 1100);
     };
 
     useEffect(() => {
-        setNumArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
         setGameCounter(gameCounter + 1);
+
+        // if (!turnFirstPlayer) {
+        setTimeout(() => {
+            setNumArray([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            setShowOneDice(false);
+        }, 3000);
+        // } else {
+        //   setShowOneDice(false);
+        // }
     }, [turnFirstPlayer]);
 
     useEffect(() => {
@@ -139,51 +151,88 @@ const RollDice = () => {
         return faces;
     };
 
-    const handleClick = (playerNumber) => {
-        setTimeout(() => {
-            let face1 = 0;
-            let face2 = 0;
+    const randomizeTillDifferent = () => {
+        let face1 = 0;
+        let face2 = 0;
 
-            do {
-                const faceArr = getFaces();
-                face1 = faceArr[0];
-                face2 = faceArr[1];
-            } while (
-                face2 === letterToNumber(stateArray[1]) ||
-                face1 === letterToNumber(stateArray[0])
-                );
+        do {
+            const faceArr = getFaces();
+            face1 = faceArr[0];
+            face2 = faceArr[1];
+        } while (
+            face2 === letterToNumber(stateArray[1]) ||
+            face1 === letterToNumber(stateArray[0])
+            );
 
+        return [face1, face2];
+    };
+
+    const handleClickFurther = (diceRolled) => {
+        const theFaceArray = randomizeTillDifferent();
+
+        let face1 = theFaceArray[0];
+        let face2 = theFaceArray[1];
+        let sum = 0;
+
+        if (diceRolled == null) {
             setStateArray([nmbrToLetter(face1), nmbrToLetter(face2)]);
-
-            const sum = face1 + face2;
-
-            setNumberDrawn(sum);
-            // setTurnFirstPlayer(!turnFirstPlayer);
-
-            let combos = getCombinations(numArray, sum);
-
-            if (combos.length > 0) {
-                setCombos(combos);
-                setShowOptions(true);
-            } else {
-                setShowOptions(false);
-                // setGameCounter(gameCounter + 1);
-
-                const score = numArray.reduce((accumulator, item) => {
-                    return accumulator + item;
-                }, 0);
-
-                if (turnFirstPlayer) {
-                    setPlayerOneScore(score);
-                } else {
-                    setPlayerTwoScore(score);
-                    // setNumArray([1,2,3,4,5,6,7,8,9]);
-                }
-
-                setCombos([]);
-                setTurnFirstPlayer(!turnFirstPlayer);
+            sum = face1 + face2;
+        } else {
+            if (diceRolled === "1") {
+                setShowOneDice(true);
+                setStateArray([nmbrToLetter(face1), stateArray[1]]);
+                sum = face1;
+            } else if (diceRolled === "2") {
+                setStateArray([nmbrToLetter(face1), nmbrToLetter(face2)]);
+                sum = face1 + face2;
             }
-            // }
+        }
+
+        setNumberDrawn(sum);
+        // setTurnFirstPlayer(!turnFirstPlayer);
+
+        let combos = getCombinations(numArray, sum);
+
+        if (combos.length > 0) {
+            setCombos(combos);
+            setShowOptions(true);
+        } else {
+            setShowOptions(false);
+
+            const score = numArray.reduce((accumulator, item) => {
+                return accumulator + item;
+            }, 0);
+
+            if (turnFirstPlayer) {
+                setPlayerOneScore(score);
+            } else {
+                setPlayerTwoScore(score);
+            }
+
+            setCombos([]);
+            setTurnFirstPlayer(!turnFirstPlayer);
+        }
+
+        if (diceRolled === "1" || diceRolled === "2") {
+            setOneOrTwoDiceDecider(false);
+        }
+    };
+
+    const handleClick = (diceRolling) => {
+        setTimeout(() => {
+            if (showOneDice) {
+                setShowOneDice(false);
+            }
+
+            if (
+                numArray.includes(7) ||
+                numArray.includes(8) ||
+                numArray.includes(9)
+            ) {
+                handleClickFurther(diceRolling);
+            } else {
+                setOneOrTwoDiceDecider(true);
+            }
         }, 200);
     };
 
@@ -227,9 +276,13 @@ const RollDice = () => {
                     </div>
                 )}
                 {(playerOneScore === 0 || playerTwoScore === 0) && !shuttingBox && (
-                    <span className="spannedTitle">
-            Lets see who can shut the box!!!!
-          </span>
+                    <Fragment>
+            <span className="spannedTitle">
+              Lets see who can shut the box!!!!
+            </span>
+                        <br />
+                        <span>(Scores below will update while switching players)</span>
+                    </Fragment>
                 )}
                 {shuttingBox && turnFirstPlayer && (
                     <span className="spannedTitle decision01">
@@ -245,14 +298,14 @@ const RollDice = () => {
                 playerTwoScore > 0 &&
                 playerOneScore > playerTwoScore && (
                     <span className="spannedTitle decision01">
-              Congrats -- Player Two has won
+              Congrats -- Player Two has won!!!!
             </span>
                 )}
                 {playerOneScore > 0 &&
                 playerTwoScore > 0 &&
                 playerOneScore < playerTwoScore && (
                     <span className="spannedTitle decision01">
-              Congrats -- Player One has won
+              Congrats -- Player One has won!!!!
             </span>
                 )}
                 {playerOneScore > 0 &&
@@ -274,25 +327,54 @@ const RollDice = () => {
                 )}
             </Jumbotron>
             <div className="outerContainer">
+                <SHutterBox remainingOnes={numArray} />
                 <div className="d-flex justify-content-around">
                     <Button
                         variant="primary"
                         className="btn01"
-                        onClick={() => handleClick(1)}
-                        disabled={!turnFirstPlayer || showOptions}
+                        onClick={() => handleClick()}
+                        disabled={!turnFirstPlayer || showOptions || oneOrTwoDiceDecider}
                     >
                         Player 1, roll the dice
                     </Button>
                     <Button
-                        onClick={() => handleClick(2)}
+                        onClick={() => handleClick()}
                         variant="primary"
                         className="btn01"
-                        disabled={turnFirstPlayer || showOptions}
+                        disabled={turnFirstPlayer || showOptions || oneOrTwoDiceDecider}
                     >
                         Player 2, roll the dice
                     </Button>
                 </div>
                 <br />
+                {!(
+                    numArray.includes(7) ||
+                    numArray.includes(8) ||
+                    numArray.includes(9)
+                ) &&
+                oneOrTwoDiceDecider && (
+                    <div className="d-flex justify-content-around">
+                        <DropdownButton
+                            id="dropdown-decider-button"
+                            title="You wanna roll 1 or both dice(s)? "
+                        >
+                            {[1, 2].map((numItem) => {
+                                return (
+                                    <Dropdown.Item
+                                        title={numItem.toString()}
+                                        key={combos.indexOf(numItem)}
+                                        onClick={(e) => {
+                                            // console.log(e.currentTarget.title);
+                                            handleClickFurther(e.currentTarget.title);
+                                        }}
+                                    >
+                                        {numItem.toString()}
+                                    </Dropdown.Item>
+                                );
+                            })}
+                        </DropdownButton>
+                    </div>
+                )}
                 {combos.length > 0 && showOptions && (
                     <div className="d-flex justify-content-around">
                         <DropdownButton
@@ -305,6 +387,7 @@ const RollDice = () => {
                                 return (
                                     <Dropdown.Item
                                         title={combo.toString()}
+                                        key={combos.indexOf(combo)}
                                         onClick={(e) => {
                                             // console.log(e.currentTarget.title);
                                             onDropDownClick(e.currentTarget.title);
@@ -326,9 +409,11 @@ const RollDice = () => {
                     </div>
                 )}
                 <br />
-                <Dice face={stateArray[0]} />
+                <div className="diceWrapper">
+                    <Dice face={stateArray[0]} showit={true} />
 
-                <Dice face={stateArray[1]} />
+                    <Dice face={stateArray[1]} showit={!showOneDice} />
+                </div>
                 <br />
                 <div className="d-flex justify-content-around">
                     <Button style={{ margin: "2em 0 0 3em" }} variant="primary">
@@ -341,7 +426,6 @@ const RollDice = () => {
                     </Button>
                 </div>
                 <br />
-                <SHutterBox remainingOnes={numArray} />
             </div>
         </div>
     );
